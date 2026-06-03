@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { MovieContext } from "../context/MovieContext";
 import MovieItem from "./MovieItem";
@@ -39,7 +39,7 @@ const Home = () => {
   const fetchCarouselMovies = async () => {
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/popular?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US&page=1`
+        `https://api.themoviedb.org/3/movie/popular?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US&page=1`,
       );
       // Only keep movies that have a backdrop image
       const withBackdrop = response.data.results.filter((m) => m.backdrop_path);
@@ -131,15 +131,13 @@ const Home = () => {
   const sectionLabel = isSearching
     ? `Results for "${query}"`
     : filterMode === "latest"
-    ? "🆕 Latest Movies (Now Playing)"
-    : "🔥 Popular Movies";
+      ? "🆕 Latest Movies (Now Playing)"
+      : "🔥 Popular Movies";
 
   return (
     <div className="home">
-
       {/* ===== FULL-WIDTH HERO WITH CYCLING MOVIE BACKGROUNDS ===== */}
       <div className="home-hero">
-
         {/* Background slides — one per movie */}
         <div className="hero-bg-container">
           {carouselMovies.map((movie, idx) => (
@@ -162,7 +160,8 @@ const Home = () => {
             Discover <span>Amazing</span> Movies
           </h2>
           <p className="hero-subtext">
-            Search from thousands of movies, explore genres and save your favorites
+            Search from thousands of movies, explore genres and save your
+            favorites
           </p>
 
           {/* Search bar with inline filter */}
