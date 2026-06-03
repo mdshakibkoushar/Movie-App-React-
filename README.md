@@ -3,7 +3,8 @@
 <img src="https://github.com/mdshakibkoushar/Training-_session-3/blob/main/Movie%20App(React)/photo/Screenshot%20(104).png">
 <img src="https://github.com/mdshakibkoushar/Training-_session-3/blob/main/Movie%20App(React)/photo/Screenshot%20(95).png">
  
-# 🎬 Movie App (React)
+# 🎬 Movie App (React)![Uploading Screenshot (317).png…]()
+
 
 A modern Movie Application built with React.js that fetches movie data from an API and displays trending movies with details like ratings, release date, overview, and trailers.
 
