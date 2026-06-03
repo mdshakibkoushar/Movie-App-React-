@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Route,
-  Routes,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import MovieDetails from "./components/MovieDetails";
 import Favorites from "./components/Favorites";
@@ -21,7 +16,9 @@ const AppContent = () => {
   const isLoggedIn = localStorage.getItem("loggedIn") === "true";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+    >
       {isLoggedIn && location.pathname !== "/login" && <NavBar />}
       <main style={{ flex: 1 }}>
         <Routes>
@@ -65,6 +62,7 @@ const App = () => {
     <MovieProvider>
       <AppContent />
     </MovieProvider>
+    // this structure allows us to keep the MovieProvider at the top level while managing the routing and authentication logic separately in AppContent.git
   );
 };
 
