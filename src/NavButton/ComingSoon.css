@@ -1,340 +1,430 @@
-/* ===== COMING SOON PAGE ===== */
-.coming-soon-page {
+/* =====================================================
+   COMING SOON — IMDb-Style UI
+   ===================================================== */
+
+/* Page */
+.cs-page {
   min-height: calc(100vh - 68px);
-  background: #0a0a0f;
-  padding: 0 0 60px;
+  background: #121212;
+  color: #fff;
+  padding-bottom: 60px;
 }
 
-/* Hero Section */
-.cs-hero {
-  background: linear-gradient(180deg, rgba(255, 165, 0, 0.12) 0%, transparent 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 52px 24px 40px;
-  text-align: center;
+/* ── HEADER ── */
+.cs-header {
+  background: #1a1a1a;
+  border-bottom: 3px solid #f5c518;
+  padding: 0;
 }
 
-.cs-hero-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, rgba(255, 165, 0, 0.2), rgba(255, 100, 0, 0.2));
-  border: 1px solid rgba(255, 165, 0, 0.4);
-  color: #ffa500;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 16px;
-  letter-spacing: 1px;
+.cs-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px 22px;
 }
 
-.cs-hero h1 {
-  font-size: 2.2rem;
+.cs-heading {
+  font-size: 1.65rem;
   font-weight: 700;
   color: #fff;
-  margin: 0 0 10px;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.3px;
 }
 
-.cs-hero h1 span {
-  background: linear-gradient(135deg, #ffa500, #ff6b35);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.cs-heading-bar {
+  display: inline-block;
+  width: 5px;
+  height: 1.65rem;
+  background: #f5c518;
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
-.cs-hero p {
-  font-size: 0.95rem;
-  color: #888;
+.cs-subheading {
+  font-size: 0.85rem;
+  color: #aaa;
   margin: 0;
+  padding-left: 17px;
 }
 
-/* Error */
+/* ── ERROR ── */
 .cs-error {
   text-align: center;
   color: #ff6b6b;
-  padding: 20px;
+  padding: 24px;
   font-size: 0.95rem;
 }
 
-/* Loading */
+/* ── LOADING ── */
 .cs-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px;
+  padding: 100px 20px;
   gap: 16px;
   color: #888;
+  font-size: 0.9rem;
 }
 
 .cs-spinner {
   width: 44px;
   height: 44px;
-  border: 3px solid rgba(255, 165, 0, 0.2);
-  border-top-color: #ffa500;
+  border: 3px solid rgba(245, 197, 24, 0.2);
+  border-top-color: #f5c518;
   border-radius: 50%;
-  animation: cs-spin 0.8s linear infinite;
+  animation: cs-spin 0.75s linear infinite;
 }
 
 @keyframes cs-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Movie Grid */
-.cs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 22px;
-  max-width: 1400px;
-  margin: 36px auto 0;
-  padding: 0 24px;
+/* ── EMPTY ── */
+.cs-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: #666;
+  font-size: 1rem;
 }
 
-/* Movie Card */
-.cs-card {
-  border-radius: 12px;
-  overflow: hidden;
-  background: #141420;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ── LIST WRAPPER ── */
+.cs-list-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 24px 0;
+}
+
+.cs-list {
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
 
-.cs-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 165, 0, 0.3);
+/* ── ROW ── */
+.cs-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid #2a2a2a;
+  transition: background 0.15s ease;
 }
 
-/* Poster Wrapper */
-.cs-poster-wrap {
+.cs-row:first-child {
+  border-top: 1px solid #2a2a2a;
+}
+
+.cs-row:hover {
+  background: #1c1c1c;
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 6px;
+}
+
+/* ── RANK ── */
+.cs-rank {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #555;
+  min-width: 36px;
+  text-align: right;
+  padding-top: 6px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── POSTER ── */
+.cs-row-poster-wrap {
   position: relative;
-  aspect-ratio: 2/3;
+  flex-shrink: 0;
+  width: 90px;
+  height: 133px;
+  border-radius: 6px;
   overflow: hidden;
+  background: #222;
+  cursor: pointer;
 }
 
-.cs-poster {
+.cs-row-poster {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.3s ease;
 }
 
-.cs-card:hover .cs-poster {
+.cs-row-poster-wrap:hover .cs-row-poster {
   transform: scale(1.06);
 }
 
-/* Days Badge (top-right) */
-.cs-days-badge {
+/* Play overlay on poster */
+.cs-row-play {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 165, 0, 0.5);
-  color: #ffa500;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 9px;
-  border-radius: 20px;
-  z-index: 3;
-  white-space: nowrap;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s ease;
 }
 
-.cs-days-badge.soon {
-  border-color: rgba(255, 80, 0, 0.6);
-  color: #ff6b35;
+.cs-row-poster-wrap:hover .cs-row-play {
+  opacity: 1;
 }
 
-.cs-days-badge.released {
-  border-color: rgba(80, 200, 80, 0.6);
-  color: #6ddd6d;
-}
-
-/* Play Button */
-.cs-play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  width: 54px;
-  height: 54px;
-  background: rgba(255, 165, 0, 0.85);
+.cs-row-play-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(245, 197, 24, 0.92);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
-  color: #fff;
-  cursor: pointer;
-  z-index: 4;
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease, background 0.25s ease;
-  box-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
-  padding-left: 4px; /* optical center for ▶ */
+  font-size: 1rem;
+  color: #111;
+  padding-left: 3px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s ease;
 }
 
-.cs-card:hover .cs-play-btn {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+.cs-row-play-icon:hover {
+  transform: scale(1.12);
 }
 
-.cs-play-btn:hover {
-  background: rgba(255, 120, 0, 1);
-  box-shadow: 0 0 30px rgba(255, 165, 0, 0.8);
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-/* Hover Overlay */
-.cs-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.97) 0%,
-    rgba(0, 0, 0, 0.75) 45%,
-    rgba(0, 0, 0, 0.15) 75%,
-    transparent 100%
-  );
+/* ── INFO ── */
+.cs-row-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 14px;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 2;
+  gap: 7px;
 }
 
-.cs-card:hover .cs-overlay {
-  opacity: 1;
-}
-
-.cs-overlay-title {
-  font-size: 0.9rem;
+/* Title */
+.cs-row-title {
+  font-size: 1.05rem;
   font-weight: 700;
   color: #fff;
-  margin: 0;
+  text-decoration: none;
   line-height: 1.3;
+  transition: color 0.18s ease;
 }
 
-.cs-overlay-date {
-  font-size: 0.75rem;
-  color: #ffa500;
-  margin: 0;
+.cs-row-title:hover {
+  color: #f5c518;
+  text-decoration: underline;
+}
+
+/* Meta row */
+.cs-row-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cs-row-year {
+  font-size: 0.82rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+.cs-row-genre {
+  font-size: 0.82rem;
+  color: #f5c518;
+  font-weight: 700;
+  background: rgba(245, 197, 24, 0.1);
+  border: 1px solid rgba(245, 197, 24, 0.3);
+  padding: 2px 9px;
+  border-radius: 4px;
+}
+
+.cs-row-days {
+  font-size: 0.76rem;
+  color: #aaa;
+  background: #222;
+  border: 1px solid #333;
+  padding: 2px 9px;
+  border-radius: 4px;
   font-weight: 600;
 }
 
-.cs-overlay-overview {
-  font-size: 0.72rem;
-  color: #ccc;
+.cs-row-days.soon {
+  color: #ff7043;
+  border-color: rgba(255, 112, 67, 0.4);
+  background: rgba(255, 112, 67, 0.08);
+}
+
+/* Overview */
+.cs-row-overview {
+  font-size: 0.84rem;
+  color: #bbb;
+  line-height: 1.6;
   margin: 0;
-  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.cs-details-btn {
+/* Release date row */
+.cs-row-date {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 9px 12px;
-  background: linear-gradient(135deg, rgba(255, 165, 0, 0.25), rgba(255, 100, 0, 0.2));
-  border: 1px solid rgba(255, 165, 0, 0.4);
-  border-radius: 8px;
-  color: #ffa500;
+  gap: 8px;
   font-size: 0.8rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  text-align: center;
 }
 
-.cs-details-btn:hover {
-  background: rgba(255, 165, 0, 0.3);
-  border-color: #ffa500;
-  color: #fff;
-}
-
-/* Card Bottom (always visible) */
-.cs-card-bottom {
-  padding: 12px 12px 14px;
-  background: #141420;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.cs-card-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
-  margin: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.cs-card-date {
-  font-size: 0.72rem;
-  color: #ffa500;
-  margin: 0;
-  font-weight: 500;
-}
-
-/* Pagination */
-.cs-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 48px;
-  padding: 0 24px;
-}
-
-.cs-pagination span {
-  font-size: 0.9rem;
+.cs-row-date-label {
   color: #888;
   font-weight: 500;
-  min-width: 140px;
-  text-align: center;
 }
 
-.cs-page-btn {
+.cs-row-date-val {
+  color: #ddd;
+  font-weight: 600;
+}
+
+/* Action buttons */
+.cs-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.cs-btn-trailer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: #f5c518;
+  border: none;
+  border-radius: 5px;
+  color: #111;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    transform 0.15s ease;
+  font-family: inherit;
+  letter-spacing: 0.2px;
+}
+
+.cs-btn-trailer:hover {
+  background: #e6b800;
+  transform: translateY(-1px);
+}
+
+.cs-btn-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 5px;
+  color: #ddd;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.18s ease;
+  letter-spacing: 0.2px;
+}
+
+.cs-btn-details:hover {
+  border-color: #f5c518;
+  color: #f5c518;
+  background: rgba(245, 197, 24, 0.06);
+}
+
+/* ── PAGINATION ── */
+.cs-pagination {
+  max-width: 1100px;
+  margin: 32px auto 0;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  color: #ccc;
-  font-size: 1.2rem;
+  gap: 20px;
+}
+
+.cs-pg-btn {
+  padding: 9px 22px;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 5px;
+  color: #ddd;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.18s ease;
   font-family: inherit;
 }
 
-.cs-page-btn:hover:not(:disabled) {
-  background: rgba(255, 165, 0, 0.2);
-  border-color: rgba(255, 165, 0, 0.5);
-  color: #ffa500;
+.cs-pg-btn:hover:not(:disabled) {
+  background: #f5c518;
+  border-color: #f5c518;
+  color: #111;
 }
 
-.cs-page-btn:disabled {
+.cs-pg-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
-  .cs-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 14px;
-    padding: 0 16px;
+.cs-pg-info {
+  font-size: 0.88rem;
+  color: #888;
+  min-width: 120px;
+  text-align: center;
+}
+
+.cs-pg-info strong {
+  color: #fff;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .cs-heading {
+    font-size: 1.2rem;
   }
-  .cs-hero h1 {
-    font-size: 1.6rem;
+
+  .cs-row {
+    gap: 12px;
+  }
+
+  .cs-rank {
+    min-width: 24px;
+    font-size: 1rem;
+  }
+
+  .cs-row-poster-wrap {
+    width: 70px;
+    height: 104px;
+  }
+
+  .cs-row-title {
+    font-size: 0.92rem;
+  }
+
+  .cs-row-overview {
+    -webkit-line-clamp: 2;
+  }
+
+  .cs-btn-trailer,
+  .cs-btn-details {
+    padding: 6px 12px;
+    font-size: 0.76rem;
   }
 }

@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { MovieContext } from "../context/MovieContext";
 import MovieItem from "./MovieItem";
-import SearchIcon from "@mui/icons-material/Search";
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
@@ -16,6 +16,40 @@ const Home = () => {
   const [carouselMovies, setCarouselMovies] = useState([]);
   const [bgIndex, setBgIndex] = useState(0);
   const { movies, setMovies, setDetailedMovies } = useContext(MovieContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Read ?search= and ?filter= params from navbar and trigger fetch
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlSearch = params.get("search");
+    const urlFilter = params.get("filter");
+
+    if (urlSearch && urlSearch.trim()) {
+      setQuery(urlSearch.trim());
+      setIsSearching(true);
+      fetchMovies(1, urlSearch.trim());
+    } else if (urlFilter) {
+      setQuery("");
+      setIsSearching(false);
+      if (urlFilter === "latest") {
+        setFilterMode("latest");
+        fetchMovies(1, "", "latest");
+      } else if (
+        urlFilter === "title" ||
+        urlFilter === "year" ||
+        urlFilter === "rating"
+      ) {
+        setSortBy(urlFilter);
+        setFilterMode("popular");
+        fetchMovies(1, "", "popular");
+      }
+    }
+    if (location.search) {
+      navigate("/", { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   const fetchMovies = async (page = 1, searchQuery = "", mode = filterMode) => {
     try {
@@ -132,7 +166,7 @@ const Home = () => {
     ? `Results for "${query}"`
     : filterMode === "latest"
       ? "🆕 Latest Movies (Now Playing)"
-      : "🔥 Popular Movies";
+      : " ";
 
   return (
     <div className="home">
@@ -163,33 +197,6 @@ const Home = () => {
             Search from thousands of movies, explore genres and save your
             favorites
           </p>
-
-          {/* Search bar with inline filter */}
-          <div className="search-bar">
-            <div className="search-input-container">
-              <div className="inline-filter-wrapper">
-                <select className="inline-filter" onChange={handleSelectChange}>
-                  <option value="all">All</option>
-                  <option value="latest">🆕 Latest</option>
-                  <option value="Sort by: Title">📝 Title</option>
-                  <option value="Sort by: Year">📅 Newest</option>
-                  <option value="Sort by: Rating">⭐ Top Rated</option>
-                </select>
-                <span className="filter-arrow">▾</span>
-              </div>
-              <input
-                type="text"
-                value={query}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                placeholder="🔍 Search for a movie..."
-              />
-              <SearchIcon className="search-icon" onClick={handleSearch} />
-            </div>
-            <button onClick={handleSearch} className="search-button">
-              Search
-            </button>
-          </div>
 
           {/* Dot indicators */}
           <div className="hero-dots">
