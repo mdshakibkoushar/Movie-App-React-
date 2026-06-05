@@ -267,14 +267,14 @@ const Home = () => {
   const displayedMovies = getSortedMovies();
 
   const sectionLabel = isSearching
-    ? `🔍 Results for "${searchQuery}"${sortBy === "year" ? " · Newest First" : sortBy === "rating" ? " · Top Rated First" : ""}`
+    ? `Results for "${searchQuery}"${sortBy === "year" ? " · Newest First" : sortBy === "rating" ? " · Top Rated First" : ""}`
     : filterMode === "latest"
-      ? "🆕 Latest Movies (Now Playing)"
+      ? "Latest Movies (Now Playing)"
       : sortBy === "year"
-        ? "📅 Popular Movies · Sorted by Newest"
+        ? "Popular Movies · Sorted by Newest"
         : sortBy === "rating"
-          ? "⭐ Popular Movies · Top Rated First"
-          : "� Popular Movies · Random";
+          ? "Popular Movies · Top Rated First"
+          : "All Popular Movies";
 
   return (
     <div className="home">
@@ -363,10 +363,10 @@ const Home = () => {
 
         {/* ── Category Pills — overlaid on hero ── */}
         <div className="filter-bar category-pills-bar hero-category-pills">
-          {CATEGORIES.map((cat) => (
+          {CATEGORIES.map((cat, index) => (
             <button
               key={cat.id}
-              className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""}`}
+              className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""} ${index >= 12 ? "mobile-hidden-pill" : ""}`}
               onClick={() => handleCategoryClick(cat)}
             >
               {cat.label}
