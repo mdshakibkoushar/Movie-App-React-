@@ -470,28 +470,56 @@
 
 /* ── RESPONSIVE ── */
 
-/* Tablet (max 900px) */
+/* Tablet (max 900px) — same as mobile layout */
 @media (max-width: 900px) {
   .home-hero {
-    height: 580px;
+    height: 650px;
   }
 
+  /* Category pills — same as desktop (blur backdrop) */
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 200px;
+    padding: 12px 14px;
+  }
+
+  /* Quick-filter bar — above category pills */
   .quick-filter-bar {
-    bottom: 22px;
-    gap: 8px;
+    bottom: 240px;
+    gap: 10px;
     width: calc(100% - 32px);
-    max-width: 700px;
+    max-width: 780px;
   }
 
   .quick-filter-btn {
-    padding: 8px 18px;
-    font-size: 0.82rem;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
+  /* Pills — auto width so text is fully visible */
   .filter-pill {
-    flex: 0 0 calc((100% - 50px) / 6);
-    font-size: 0.75rem;
-    padding: 7px 8px;
+    flex: 0 0 auto;
+    font-size: 0.76rem;
+    padding: 7px 12px;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  /* Hide category pills beyond 12 on tablet */
+  .mobile-hidden-pill {
+    display: none !important;
   }
 
   .movie-list {
@@ -501,10 +529,10 @@
   }
 }
 
-/* Mobile (max 768px) */
+/* Mobile (max 768px) — same layout as desktop */
 @media (max-width: 768px) {
   .home-hero {
-    height: 500px;
+    height: 650px;
   }
 
   .hero-heading {
@@ -514,33 +542,50 @@
     font-size: 0.82rem;
   }
 
-  /* Remove background from category pills bar on mobile */
-  .category-pills-bar {
-    background: transparent;
-    border-bottom: 1px solid #2a2a2a;
+  /* Category pills — same as desktop (blur backdrop) */
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 180px;
+    padding: 10px 12px;
   }
 
+  /* Quick-filter bar — same position above category pills */
   .quick-filter-bar {
-    bottom: 18px;
-    gap: 7px;
+    bottom: 240px;
+    gap: 8px;
     width: calc(100% - 24px);
-    max-width: 600px;
+    max-width: 700px;
   }
 
   .quick-filter-btn {
-    padding: 7px 16px;
+    padding: 8px 14px;
     font-size: 0.8rem;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: none;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
+  /* Pills — auto width so text is fully visible */
   .filter-pill {
-    flex: 0 0 calc((100% - 40px) / 5);
-    font-size: 0.72rem;
-    padding: 6px 6px;
+    flex: 0 0 auto;
+    font-size: 0.73rem;
+    padding: 6px 10px;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  /* Hide category pills beyond 12 on mobile */
+  .mobile-hidden-pill {
+    display: none !important;
   }
 
   .movie-list {
@@ -564,30 +609,46 @@
 /* Small Mobile (max 540px) */
 @media (max-width: 540px) {
   .home-hero {
-    height: 480px;
+    height: 600px;
   }
 
   .hero-heading {
     font-size: 1.3rem;
   }
 
+  .mobile-hidden-pill {
+    display: none !important;
+  }
+
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 160px;
+    padding: 8px 10px;
+  }
+
   .quick-filter-bar {
-    bottom: 16px;
+    bottom: 220px;
     gap: 6px;
     width: calc(100% - 20px);
     max-width: 100%;
   }
 
   .quick-filter-btn {
-    padding: 7px 12px;
-    font-size: 0.75rem;
+    padding: 7px 14px;
+    font-size: 0.78rem;
     flex: 1 1 auto;
     text-align: center;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: none;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
   .filter-pill {
@@ -606,7 +667,7 @@
 /* Extra Small (max 480px) */
 @media (max-width: 480px) {
   .home-hero {
-    height: 440px;
+    height: 580px;
   }
 
   .hero-heading {
@@ -616,8 +677,16 @@
     font-size: 0.78rem;
   }
 
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 150px;
+    padding: 8px 8px;
+  }
+
   .quick-filter-bar {
-    bottom: 14px;
+    bottom: 210px;
     gap: 5px;
     width: calc(100% - 16px);
     max-width: 100%;
@@ -628,11 +697,15 @@
     font-size: 0.72rem;
     border-radius: 20px;
     flex: 1 1 auto;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: none;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
   .filter-pill {
@@ -664,15 +737,23 @@
 /* Very Small (max 360px) */
 @media (max-width: 360px) {
   .home-hero {
-    height: 400px;
+    height: 560px;
   }
 
   .hero-heading {
     font-size: 1rem;
   }
 
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 140px;
+    padding: 6px 6px;
+  }
+
   .quick-filter-bar {
-    bottom: 12px;
+    bottom: 200px;
     gap: 4px;
     width: calc(100% - 12px);
     max-width: 100%;
@@ -682,11 +763,15 @@
     padding: 5px 8px;
     font-size: 0.68rem;
     flex: 1 1 auto;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: none;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
   .filter-pill {

@@ -49,6 +49,12 @@
   margin: 0;
   padding-left: 17px;
 }
+.cs-back {
+display: inline-block;
+align-items: center;
+gap: 6px;
+margin-bottom: 8px;
+}
 
 /* ── ERROR ── */
 .cs-error {
