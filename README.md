@@ -4,7 +4,7 @@
 <img width="1920" height="1080" alt="Screenshot (319)" src="https://github.com/user-attachments/assets/4e7d5fdf-7fd1-4a85-bd70-2f9cd8466fb3" />
 <img width="1920" height="1080" alt="Screenshot (318)" src="https://github.com/user-attachments/assets/7eeb02cc-1687-4df7-ab31-5cc542fda3a2" />
 
- 
+ DEMO: https://6a232c2490e925700bfb0a89--joyful-begonia-dae337.netlify.app/login
 # 🎬 Movie App (React)
 
 A modern Movie Application built with React.js that fetches movie data from an API and displays trending movies with details like ratings, release date, overview, and trailers.
