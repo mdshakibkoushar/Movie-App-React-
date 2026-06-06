@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import { MovieContext } from "../context/MovieContext";
 import "./NavBar.css";
@@ -14,11 +13,6 @@ const NavBar = () => {
   const menuRef = useRef(null);
   const isFirstRender = useRef(true); // skip effect on initial mount
   const { setSearchConfig } = useContext(MovieContext);
-
-  const handleLogout = () => {
-    localStorage.removeItem("loggedIn");
-    navigate("/login");
-  };
 
   // ── Auto-search: trigger search 350ms after user stops typing ──
   // ── When cleared (empty), reset to popular movies ──
@@ -112,18 +106,6 @@ const NavBar = () => {
                 >
                   ❤️ Favorites
                 </NavLink>
-                {localStorage.getItem("loggedIn") === "true" && (
-                  <button
-                    className="imdb-dropdown-item imdb-dropdown-logout"
-                    onClick={() => {
-                      setMenuOpen(false);
-                      handleLogout();
-                    }}
-                  >
-                    <LogoutIcon fontSize="small" />
-                    Sign Out
-                  </button>
-                )}
               </div>
             )}
           </div>
@@ -176,13 +158,6 @@ const NavBar = () => {
           >
             <span className="imdb-nav-text">Favorites</span>
           </NavLink>
-
-          {localStorage.getItem("loggedIn") === "true" && (
-            <button className="imdb-logout-btn" onClick={handleLogout}>
-              <LogoutIcon fontSize="small" />
-              <span>Sign Out</span>
-            </button>
-          )}
         </nav>
       </div>
     </header>

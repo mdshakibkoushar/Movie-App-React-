@@ -402,8 +402,7 @@
   }
 
   .imdb-logo {
-    font-size: 0.95rem;
-    padding: 4px 8px;
+    display: none;
   }
 
   /* Search wrapper fills remaining space fully */
@@ -440,11 +439,6 @@
     gap: 4px;
   }
 
-  .imdb-logo {
-    font-size: 0.82rem;
-    padding: 4px 7px;
-  }
-
   .imdb-search-box {
     height: 34px;
   }
@@ -465,11 +459,6 @@
 }
 
 @media (max-width: 360px) {
-  .imdb-logo {
-    font-size: 0.75rem;
-    padding: 3px 6px;
-  }
-
   .imdb-search-box {
     height: 32px;
   }
