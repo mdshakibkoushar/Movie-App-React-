@@ -12,6 +12,7 @@ const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const isFirstRender = useRef(true); // skip effect on initial mount
   const { setSearchConfig } = useContext(MovieContext);
 
   const handleLogout = () => {
@@ -19,13 +20,40 @@ const NavBar = () => {
     navigate("/login");
   };
 
+  // ── Auto-search: trigger search 350ms after user stops typing ──
+  // ── When cleared (empty), reset to popular movies ──
+  useEffect(() => {
+    // Skip on initial mount so we don't reset home on page load
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const trimmed = searchQuery.trim();
+
+    const timer = setTimeout(() => {
+      navigate("/");
+      setTimeout(() => {
+        if (trimmed) {
+          // Has text → search for it
+          setSearchConfig({ query: trimmed, filter: "popular" });
+        } else {
+          // Cleared → reset to popular/default
+          setSearchConfig({ query: "", filter: "popular" });
+        }
+      }, 50);
+    }, 350);
+
+    return () => clearTimeout(timer); // Cancel if user keeps typing
+  }, [searchQuery]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleSearch = (e) => {
     e.preventDefault();
-    // Navigate to home first, then set the search config
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
     navigate("/");
-    // Use setTimeout to ensure Home is mounted before config is set
     setTimeout(() => {
-      setSearchConfig({ query: searchQuery.trim(), filter: "popular" });
+      setSearchConfig({ query: trimmed, filter: "popular" });
     }, 50);
     setSearchQuery("");
   };
@@ -84,6 +112,18 @@ const NavBar = () => {
                 >
                   ❤️ Favorites
                 </NavLink>
+                {localStorage.getItem("loggedIn") === "true" && (
+                  <button
+                    className="imdb-dropdown-item imdb-dropdown-logout"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    <LogoutIcon fontSize="small" />
+                    Sign Out
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -94,27 +134,29 @@ const NavBar = () => {
           </NavLink>
         </div>
 
-        {/* ── CENTER: Search Bar with Filter ── */}
-        <form className="imdb-search-form" onSubmit={handleSearch}>
-          <div className="imdb-search-box">
-            <input
-              type="text"
-              className="imdb-search-input"
-              placeholder="Search movies, shows..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="imdb-search-btn"
-              aria-label="Search"
-            >
-              <SearchIcon />
-            </button>
-          </div>
-        </form>
+        {/* ── CENTER: Search Bar ── */}
+        <div className="imdb-search-wrapper">
+          <form className="imdb-search-form" onSubmit={handleSearch}>
+            <div className="imdb-search-box">
+              <input
+                type="text"
+                className="imdb-search-input"
+                placeholder="Search movies, shows..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="imdb-search-btn"
+                aria-label="Search"
+              >
+                <SearchIcon />
+              </button>
+            </div>
+          </form>
+        </div>
 
-        {/* ── RIGHT: Nav Links + Logout ── */}
+        {/* ── RIGHT: Nav Links + Logout (desktop) ── */}
         <nav className="imdb-right">
           <NavLink
             to="/"
@@ -134,8 +176,6 @@ const NavBar = () => {
           >
             <span className="imdb-nav-text">Favorites</span>
           </NavLink>
-
-          <div className="imdb-divider" />
 
           {localStorage.getItem("loggedIn") === "true" && (
             <button className="imdb-logout-btn" onClick={handleLogout}>

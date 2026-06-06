@@ -2,218 +2,114 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
+/* ── Streaming Provider → Website URL map (TMDB provider IDs) ── */
+const PROVIDER_URLS = {
+  8: "https://www.netflix.com", // Netflix
+  9: "https://www.amazon.com/Prime-Video", // Amazon Prime Video
+  10: "https://www.amazon.com/Prime-Video", // Amazon Video
+  15: "https://www.hulu.com", // Hulu
+  29: "https://play.google.com/store/movies", // Google Play Movies
+  2: "https://tv.apple.com", // Apple iTunes
+  350: "https://tv.apple.com", // Apple TV+
+  68: "https://www.microsoftstore.com", // Microsoft Store
+  3: "https://play.google.com/store/movies", // Google Play
+  192: "https://www.youtube.com/movies", // YouTube
+  11: "https://www.mubi.com", // Mubi
+  37: "https://www.fandangonow.com", // Fandango at Home
+  78: "https://www.peacocktv.com", // Peacock
+  386: "https://www.peacocktv.com", // Peacock Premium
+  531: "https://www.paramountplus.com", // Paramount+
+  387: "https://www.hbomax.com", // HBO Max
+  384: "https://www.hbomax.com", // HBO
+  283: "https://www.crunchyroll.com", // Crunchyroll
+  190: "https://www.discoveryplus.com", // Discovery+
+  43: "https://www.starz.com", // Starz
+  526: "https://www.starz.com", // Starz Apple TV Channel
+  39: "https://www.sundancenow.com", // Sundance Now
+  100: "https://www.bet.com", // BET+
+  175: "https://www.netflix.com", // Netflix Kids
+  1796: "https://www.netflix.com", // Netflix basic with Ads
+  2100: "https://www.jiocinema.com", // JioCinema
+  237: "https://www.hotstar.com", // Disney+ Hotstar
+  122: "https://www.hotstar.com", // Hotstar
+  220: "https://www.hotstar.com", // Star Plus
+  1892: "https://www.primevideo.com", // Prime Video (India)
+  218: "https://www.sonyliv.com", // SonyLIV
+  309: "https://www.zee5.com", // Zee5
+  121: "https://www.voot.com", // Voot
+  255: "https://www.erosnow.com", // Eros Now
+  232: "https://www.mxplayer.in", // MX Player
+  315: "https://www.disneyplus.com", // Disney+
+};
+
 /* ───────────────────────────────────────────────
-   Music Modal – shows Song 1/2/3/4 + real TMDB
-   video names, plays each inline via YouTube embed
+   Movie Player Modal – uses vidsrc.sbs API
+   Format: https://vidsrc.sbs/embed/movie/{tmdb_id}
 ─────────────────────────────────────────────── */
-const FIXED_SONGS = [
-  { key: "fixed-1", name: "Song 1", type: "Song", fixed: true, index: 0 },
-  { key: "fixed-2", name: "Song 2", type: "Song", fixed: true, index: 1 },
-  { key: "fixed-3", name: "Song 3", type: "Song", fixed: true, index: 2 },
-  { key: "fixed-4", name: "Song 4", type: "Song", fixed: true, index: 3 },
-];
-
 const MusicModal = ({ movieTitle, movieId, onClose }) => {
-  const [tmdbVideos, setTmdbVideos] = useState([]);
-  const [loadingList, setLoadingList] = useState(true);
-  const [activeVideo, setActiveVideo] = useState(null); // { key, name, fixed?, index? }
-
   useEffect(() => {
     const handleKey = (e) => {
-      if (e.key === "Escape") {
-        if (activeVideo) setActiveVideo(null);
-        else onClose();
-      }
+      if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [onClose, activeVideo]);
+  }, [onClose]);
 
-  // Fetch real video names from TMDB
-  useEffect(() => {
-    setLoadingList(true);
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US`,
-      )
-      .then((res) => {
-        const all = (res.data.results || [])
-          .filter((v) => v.site === "YouTube")
-          .slice(0, 8)
-          .map((v) => ({
-            key: v.key,
-            name: v.name,
-            type: v.type,
-            fixed: false,
-          }));
-        setTmdbVideos(all);
-        setLoadingList(false);
-      })
-      .catch(() => {
-        setTmdbVideos([]);
-        setLoadingList(false);
-      });
-  }, [movieId]);
-
-  // Resolve embed key for active video
-  const embedKey = activeVideo
-    ? activeVideo.fixed
-      ? tmdbVideos[activeVideo.index % Math.max(tmdbVideos.length, 1)]?.key ||
-        null
-      : activeVideo.key
-    : null;
-
-  // All items to display = fixed songs + tmdb videos
-  const allItems = [...FIXED_SONGS, ...tmdbVideos];
+  const embedUrl = `https://vidsrc.sbs/embed/movie/${movieId}`;
 
   return (
-    <div
-      style={sm.backdrop}
-      onClick={() => {
-        if (activeVideo) setActiveVideo(null);
-        else onClose();
-      }}
-    >
+    <div style={sm.backdrop} onClick={onClose}>
       <div
-        style={{
-          ...sm.modal,
-          maxWidth: activeVideo ? "860px" : "500px",
-          transition: "max-width 0.3s ease",
-        }}
+        style={{ ...sm.modal, maxWidth: "960px", width: "96vw" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div style={sm.header}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              minWidth: 0,
-            }}
-          >
-            {activeVideo && (
-              <button style={sm.backBtn} onClick={() => setActiveVideo(null)}>
-                ←
-              </button>
-            )}
-            <h3 style={sm.title}>
-              🎵 {movieTitle}
-              {activeVideo ? ` — ${activeVideo.name}` : " — Songs"}
-            </h3>
-          </div>
+          <h3 style={sm.title}>🎬 {movieTitle}</h3>
           <button style={sm.closeBtn} onClick={onClose}>
             ✕
           </button>
         </div>
 
-        {/* Song list: Song 1-4 always shown + TMDB videos below */}
-        {!activeVideo && (
-          <div style={sm.songList}>
-            {/* Fixed Song 1-4 always visible */}
-            {FIXED_SONGS.map((video, i) => (
-              <button
-                key={video.key}
-                style={{
-                  ...sm.songRow,
-                  borderLeft: "3px solid rgba(229,9,20,0.5)",
-                }}
-                onClick={() => setActiveVideo(video)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(229,9,20,0.18)";
-                  e.currentTarget.style.borderColor = "#e50914";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                  e.currentTarget.style.borderColor = "rgba(229,9,20,0.5)";
-                }}
-              >
-                <span style={sm.songNum}>{i + 1}</span>
-                <span style={sm.songIcon}>🎵</span>
-                <span style={sm.songName}>{video.name}</span>
-                <span style={sm.songType}>{video.type}</span>
-                <span style={sm.playIcon}>▶</span>
-              </button>
-            ))}
+        {/* Player – vidsrc.sbs embed by TMDB ID */}
+        <div style={{ ...sm.body, minHeight: "500px" }}>
+          <iframe
+            key={movieId}
+            style={{
+              width: "100%",
+              height: "100%",
+              minHeight: "500px",
+              display: "block",
+              border: "none",
+            }}
+            src={embedUrl}
+            title={movieTitle}
+            allowFullScreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
 
-            {/* Divider */}
-            <div
-              style={{
-                borderTop: "1px solid rgba(255,255,255,0.08)",
-                margin: "8px 0 12px",
-              }}
-            />
-
-            {/* TMDB videos below */}
-            {loadingList && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  padding: "8px 4px",
-                  color: "#666",
-                  fontSize: "0.85rem",
-                }}
-              >
-                <div
-                  style={{
-                    ...sm.spinner,
-                    width: "18px",
-                    height: "18px",
-                    borderWidth: "2px",
-                  }}
-                ></div>
-                Loading more videos...
-              </div>
-            )}
-            {!loadingList &&
-              tmdbVideos.map((video, i) => (
-                <button
-                  key={video.key}
-                  style={{ ...sm.songRow }}
-                  onClick={() => setActiveVideo(video)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(229,9,20,0.18)";
-                    e.currentTarget.style.borderColor = "#e50914";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                    e.currentTarget.style.borderColor =
-                      "rgba(255,255,255,0.08)";
-                  }}
-                >
-                  <span style={sm.songNum}>{FIXED_SONGS.length + i + 1}</span>
-                  <span style={sm.songIcon}>🎬</span>
-                  <span style={sm.songName}>{video.name}</span>
-                  <span style={sm.songType}>{video.type}</span>
-                  <span style={sm.playIcon}>▶</span>
-                </button>
-              ))}
-          </div>
-        )}
-
-        {/* Player area */}
-        {activeVideo && (
-          <div style={sm.body}>
-            {embedKey ? (
-              <iframe
-                style={sm.iframe}
-                src={`https://www.youtube.com/embed/${embedKey}?autoplay=1&rel=0`}
-                title={activeVideo.name}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <div style={sm.loadingBox}>
-                <p style={{ color: "#aaa", margin: 0 }}>
-                  😕 No video available for this movie.
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Info bar */}
+        <div
+          style={{
+            padding: "10px 16px",
+            background: "rgba(0,0,0,0.5)",
+            borderTop: "1px solid rgba(255,255,255,0.07)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>
+            Powered by vidsrc.sbs • TMDB ID: {movieId}
+          </span>
+          <span
+            style={{ fontSize: "0.72rem", color: "#444", fontStyle: "italic" }}
+          >
+            Press Escape or click outside to close
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -370,6 +266,9 @@ const MovieDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [justWatchLink, setJustWatchLink] = useState("");
+  const [allProviders, setAllProviders] = useState([]);
+
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
@@ -388,12 +287,31 @@ const MovieDetails = () => {
         const dir = creditsRes.data.crew.find((m) => m.job === "Director");
         setDirector(dir ? dir.name : "Unknown");
         setCast(creditsRes.data.cast.slice(0, 6));
-        // Watch providers
+        // Watch providers — prefer IN, fallback to US or first available
         const results = providersRes.data.results;
         const region =
           results?.IN || results?.US || Object.values(results || {})[0];
-        const providers = region?.flatrate || region?.buy || region?.rent || [];
-        setWatchProviders(providers.slice(0, 6));
+        // TMDB provides a JustWatch link per region — use it for exact movie redirect
+        const tmdbLink = region?.link || "";
+        setJustWatchLink(tmdbLink);
+        // Collect all provider types with labels
+        const seen = new Set();
+        const combined = [];
+        const addProviders = (list, type) => {
+          (list || []).forEach((p) => {
+            if (!seen.has(p.provider_id)) {
+              seen.add(p.provider_id);
+              combined.push({ ...p, streamType: type });
+            }
+          });
+        };
+        addProviders(region?.flatrate, "Stream");
+        addProviders(region?.free, "Free");
+        addProviders(region?.ads, "Free (Ads)");
+        addProviders(region?.rent, "Rent");
+        addProviders(region?.buy, "Buy");
+        setAllProviders(combined);
+        setWatchProviders(combined.slice(0, 10));
       } catch (err) {
         setError("Failed to load movie details.");
       } finally {
@@ -413,6 +331,7 @@ const MovieDetails = () => {
       director={director}
       cast={cast}
       watchProviders={watchProviders}
+      justWatchLink={justWatchLink}
       onBack={() => navigate(-1)}
     />
   );
@@ -439,6 +358,7 @@ const MovieDetailsView = ({
   director,
   cast,
   watchProviders,
+  justWatchLink,
   onBack,
 }) => {
   const [showMusicModal, setShowMusicModal] = useState(false);
@@ -536,7 +456,6 @@ const MovieDetailsView = ({
                     lineHeight: 1.2,
                   }}
                 >
-                  {/* <span style={{ fontSize: "0.7rem", opacity: 0.8, letterSpacing: "0.5px" }}>🎬 &nbsp;Watch &amp; Listen</span> */}
                   <span style={{ fontSize: "1rem", fontWeight: 800 }}>
                     Play
                   </span>
@@ -617,22 +536,119 @@ const MovieDetailsView = ({
             {watchProviders && watchProviders.length > 0 && (
               <div style={s.section}>
                 <h3 style={s.sectionTitle}>🎬 Watch On</h3>
+                <p
+                  style={{
+                    fontSize: "0.78rem",
+                    color: "#666",
+                    margin: "-6px 0 12px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Click on a platform to watch this movie
+                </p>
                 <div style={s.providersRow}>
-                  {watchProviders.map((p) => (
-                    <div
-                      key={p.provider_id}
-                      style={s.providerItem}
-                      title={p.provider_name}
-                    >
-                      <img
-                        src={`https://image.tmdb.org/t/p/w92${p.logo_path}`}
-                        alt={p.provider_name}
-                        style={s.providerLogo}
-                      />
-                      <span style={s.providerName}>{p.provider_name}</span>
-                    </div>
-                  ))}
+                  {watchProviders.map((p) => {
+                    // Priority: provider's own site → JustWatch movie page → search fallback
+                    const directUrl = PROVIDER_URLS[p.provider_id];
+                    const providerUrl = directUrl
+                      ? directUrl
+                      : justWatchLink
+                        ? justWatchLink
+                        : `https://www.justwatch.com/in/search?q=${encodeURIComponent(movie.title)}`;
+                    // Badge color by stream type
+                    const badgeColor =
+                      p.streamType === "Stream"
+                        ? "#4caf50"
+                        : p.streamType === "Free" ||
+                            p.streamType === "Free (Ads)"
+                          ? "#2196F3"
+                          : p.streamType === "Rent"
+                            ? "#FF9800"
+                            : p.streamType === "Buy"
+                              ? "#9C27B0"
+                              : "#666";
+                    return (
+                      <a
+                        key={p.provider_id}
+                        href={providerUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={s.providerItem}
+                        title={`${p.streamType || "Watch"} on ${p.provider_name}`}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform =
+                            "translateY(-4px) scale(1.08)";
+                          e.currentTarget.style.opacity = "1";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform =
+                            "translateY(0) scale(1)";
+                          e.currentTarget.style.opacity = "0.9";
+                        }}
+                      >
+                        <div style={{ position: "relative" }}>
+                          <img
+                            src={`https://image.tmdb.org/t/p/w92${p.logo_path}`}
+                            alt={p.provider_name}
+                            style={s.providerLogo}
+                          />
+                          {p.streamType && (
+                            <span
+                              style={{
+                                position: "absolute",
+                                bottom: "-6px",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                background: badgeColor,
+                                color: "#fff",
+                                fontSize: "0.55rem",
+                                fontWeight: 700,
+                                padding: "1px 5px",
+                                borderRadius: "4px",
+                                whiteSpace: "nowrap",
+                                letterSpacing: "0.3px",
+                              }}
+                            >
+                              {p.streamType}
+                            </span>
+                          )}
+                        </div>
+                        <span style={{ ...s.providerName, marginTop: "8px" }}>
+                          {p.provider_name}
+                        </span>
+                      </a>
+                    );
+                  })}
                 </div>
+                {/* JustWatch link for all options */}
+                {justWatchLink && (
+                  <a
+                    href={justWatchLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      marginTop: "14px",
+                      color: "#e50914",
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      textDecoration: "none",
+                      opacity: 0.85,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = "1";
+                      e.currentTarget.style.textDecoration = "underline";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = "0.85";
+                      e.currentTarget.style.textDecoration = "none";
+                    }}
+                  >
+                    🔍 See all options on JustWatch →
+                  </a>
+                )}
               </div>
             )}
           </div>
@@ -649,16 +665,221 @@ const DetailItem = ({ label, value }) => (
   </div>
 );
 
-const CastCard = ({ actor }) => {
+/* ───────────────────────────────────────────────
+   Social Media Modal – shows social links for cast
+─────────────────────────────────────────────── */
+const SocialModal = ({ actor, socialLinks, onClose }) => {
   const photo = actor.profile_path
     ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
     : "https://via.placeholder.com/100x150/1a1a2e/888?text=?";
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  const platforms = [
+    {
+      key: "instagram_id",
+      label: "Instagram",
+      url: (id) => `https://www.instagram.com/${id}`,
+      icon: "📸",
+      color: "#E1306C",
+      bg: "linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)",
+    },
+    {
+      key: "twitter_id",
+      label: "X (Twitter)",
+      url: (id) => `https://twitter.com/${id}`,
+      icon: "🐦",
+      color: "#1DA1F2",
+      bg: "linear-gradient(135deg,#1DA1F2,#0d8ed4)",
+    },
+    {
+      key: "facebook_id",
+      label: "Facebook",
+      url: (id) => `https://www.facebook.com/${id}`,
+      icon: "👤",
+      color: "#1877F2",
+      bg: "linear-gradient(135deg,#1877F2,#0d5bbd)",
+    },
+    {
+      key: "tiktok_id",
+      label: "TikTok",
+      url: (id) => `https://www.tiktok.com/@${id}`,
+      icon: "🎵",
+      color: "#010101",
+      bg: "linear-gradient(135deg,#010101,#69C9D0)",
+    },
+    {
+      key: "youtube_id",
+      label: "YouTube",
+      url: (id) => `https://www.youtube.com/${id}`,
+      icon: "▶️",
+      color: "#FF0000",
+      bg: "linear-gradient(135deg,#FF0000,#cc0000)",
+    },
+    {
+      key: "imdb_id",
+      label: "IMDb",
+      url: (id) => `https://www.imdb.com/name/${id}`,
+      icon: "🎬",
+      color: "#F5C518",
+      bg: "linear-gradient(135deg,#F5C518,#d4a800)",
+    },
+  ];
+
+  const availableLinks = platforms.filter(
+    (p) => socialLinks && socialLinks[p.key],
+  );
+  const hasLinks = availableLinks.length > 0;
+
   return (
-    <div style={s.castCard}>
-      <img src={photo} alt={actor.name} style={s.castPhoto} />
-      <p style={s.castName}>{actor.name}</p>
-      <p style={s.castChar}>{actor.character || ""}</p>
+    <div style={soc.backdrop} onClick={onClose}>
+      <div style={soc.modal} onClick={(e) => e.stopPropagation()}>
+        {/* Close Button */}
+        <button style={soc.closeBtn} onClick={onClose}>
+          ✕
+        </button>
+
+        {/* Actor Info */}
+        <div style={soc.actorHeader}>
+          <img src={photo} alt={actor.name} style={soc.actorPhoto} />
+          <div style={soc.actorInfo}>
+            <h3 style={soc.actorName}>{actor.name}</h3>
+            <p style={soc.actorChar}>as {actor.character || "—"}</p>
+            <p style={soc.socialTitle}>🌐 Social Media</p>
+          </div>
+        </div>
+
+        {/* Social Links */}
+        <div style={soc.linksContainer}>
+          {hasLinks ? (
+            availableLinks.map((platform) => (
+              <a
+                key={platform.key}
+                href={platform.url(socialLinks[platform.key])}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ ...soc.linkBtn, background: platform.bg }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform =
+                    "translateY(-3px) scale(1.03)";
+                  e.currentTarget.style.boxShadow =
+                    "0 12px 30px rgba(0,0,0,0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0) scale(1)";
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 14px rgba(0,0,0,0.3)";
+                }}
+              >
+                <span style={soc.linkIcon}>{platform.icon}</span>
+                <span style={soc.linkLabel}>{platform.label}</span>
+                <span style={soc.linkArrow}>→</span>
+              </a>
+            ))
+          ) : (
+            <div style={soc.noLinks}>
+              <span style={{ fontSize: "2rem" }}>😔</span>
+              <p
+                style={{ color: "#888", margin: "8px 0 0", fontSize: "0.9rem" }}
+              >
+                No social media links available
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
+  );
+};
+
+const CastCard = ({ actor }) => {
+  const [showSocial, setShowSocial] = useState(false);
+  const [socialLinks, setSocialLinks] = useState(null);
+  const [loadingSocial, setLoadingSocial] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  const photo = actor.profile_path
+    ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+    : "https://via.placeholder.com/100x150/1a1a2e/888?text=?";
+
+  const handlePhotoClick = async () => {
+    setShowSocial(true);
+    if (socialLinks === null) {
+      setLoadingSocial(true);
+      try {
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/person/${actor.id}/external_ids?api_key=4e44d9029b1270a757cddc766a1bcb63`,
+        );
+        setSocialLinks(res.data);
+      } catch {
+        setSocialLinks({});
+      } finally {
+        setLoadingSocial(false);
+      }
+    }
+  };
+
+  return (
+    <>
+      {showSocial &&
+        (loadingSocial ? (
+          <div style={soc.backdrop} onClick={() => setShowSocial(false)}>
+            <div
+              style={{
+                ...soc.modal,
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "220px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button style={soc.closeBtn} onClick={() => setShowSocial(false)}>
+                ✕
+              </button>
+              <div style={s.spinner}></div>
+              <p style={{ color: "#888", fontSize: "0.9rem" }}>
+                Loading social media...
+              </p>
+            </div>
+          </div>
+        ) : (
+          <SocialModal
+            actor={actor}
+            socialLinks={socialLinks}
+            onClose={() => setShowSocial(false)}
+          />
+        ))}
+      <div style={s.castCard}>
+        <div
+          style={{
+            ...soc.photoWrapper,
+            transform: hovered ? "scale(1.07)" : "scale(1)",
+            transition: "transform 0.2s ease",
+            boxShadow: hovered ? "0 8px 24px rgba(229,9,20,0.5)" : "none",
+          }}
+          onClick={handlePhotoClick}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          title="Click to see social media"
+        >
+          <img src={photo} alt={actor.name} style={s.castPhoto} />
+          <div style={{ ...soc.photoOverlay, opacity: hovered ? 1 : 0 }}>
+            <span style={soc.overlayIcon}>🌐</span>
+          </div>
+        </div>
+        <p style={s.castName}>{actor.name}</p>
+        <p style={s.castChar}>{actor.character || ""}</p>
+      </div>
+    </>
   );
 };
 
@@ -897,7 +1118,10 @@ const s = {
     flexDirection: "column",
     alignItems: "center",
     gap: "6px",
-    cursor: "default",
+    cursor: "pointer",
+    textDecoration: "none",
+    opacity: "0.9",
+    transition: "all 0.2s ease",
   },
   providerLogo: {
     width: "56px",
@@ -914,6 +1138,129 @@ const s = {
     maxWidth: "70px",
     lineHeight: 1.3,
   },
+};
+
+/* ── Social Media Modal Styles ── */
+const soc = {
+  backdrop: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.85)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 9999,
+    padding: "20px",
+  },
+  modal: {
+    position: "relative",
+    background: "#141420",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "20px",
+    width: "100%",
+    maxWidth: "380px",
+    overflow: "hidden",
+    boxShadow: "0 30px 80px rgba(0,0,0,0.9)",
+    padding: "24px",
+  },
+  closeBtn: {
+    position: "absolute",
+    top: "14px",
+    right: "14px",
+    background: "rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.2)",
+    color: "#fff",
+    width: "32px",
+    height: "32px",
+    borderRadius: "50%",
+    cursor: "pointer",
+    fontSize: "0.95rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  actorHeader: {
+    display: "flex",
+    alignItems: "center",
+    gap: "16px",
+    marginBottom: "20px",
+    paddingBottom: "16px",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+  },
+  actorPhoto: {
+    width: "70px",
+    height: "95px",
+    objectFit: "cover",
+    borderRadius: "10px",
+    border: "2px solid rgba(229,9,20,0.4)",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.5)",
+    flexShrink: 0,
+  },
+  actorInfo: { flex: 1, minWidth: 0 },
+  actorName: {
+    fontSize: "1rem",
+    fontWeight: 700,
+    color: "#fff",
+    margin: "0 0 4px",
+  },
+  actorChar: {
+    fontSize: "0.78rem",
+    color: "#888",
+    fontStyle: "italic",
+    margin: "0 0 8px",
+  },
+  socialTitle: {
+    fontSize: "0.8rem",
+    color: "#e50914",
+    fontWeight: 600,
+    margin: 0,
+  },
+  linksContainer: { display: "flex", flexDirection: "column", gap: "10px" },
+  linkBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    padding: "12px 16px",
+    borderRadius: "12px",
+    textDecoration: "none",
+    color: "#fff",
+    fontWeight: 600,
+    fontSize: "0.9rem",
+    transition: "all 0.2s ease",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
+    cursor: "pointer",
+  },
+  linkIcon: { fontSize: "1.2rem", flexShrink: 0 },
+  linkLabel: { flex: 1 },
+  linkArrow: { fontSize: "1rem", opacity: 0.8 },
+  noLinks: {
+    textAlign: "center",
+    padding: "24px 0",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  photoWrapper: {
+    position: "relative",
+    cursor: "pointer",
+    borderRadius: "10px",
+    overflow: "hidden",
+    width: "80px",
+    height: "110px",
+  },
+  photoOverlay: {
+    position: "absolute",
+    inset: 0,
+    background: "rgba(229,9,20,0.75)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0,
+    transition: "opacity 0.2s ease",
+    borderRadius: "10px",
+  },
+  overlayIcon: { fontSize: "1.6rem" },
 };
 
 export default MovieDetails;
