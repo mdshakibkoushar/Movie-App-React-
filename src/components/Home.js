@@ -292,51 +292,6 @@ const Home = () => {
             </button>
           ))}
         </div>
-
-      </div>
-
-      {/* ── Mobile Filter Section (below hero, only visible on mobile) ── */}
-      <div className="mobile-filter-section">
-        {/* 5 Quick Buttons */}
-        <div className="mobile-quick-filters">
-          {[
-            { id: "all",        label: "All" },
-            { id: "rating",     label: "Top Rated" },
-            { id: "latest",     label: "Latest" },
-            { id: "year",       label: "Newest" },
-            { id: "comingsoon", label: "Coming Soon" },
-          ].map((btn) => (
-            <button
-              key={btn.id}
-              className={`quick-filter-btn ${activeCategory === "hero-" + btn.id ? "active" : ""}`}
-              onClick={() => {
-                if (btn.id === "comingsoon") { navigate("/coming-soon"); return; }
-                setActiveCategory("hero-" + btn.id);
-                setCurrentPage(1);
-                setIsSearching(false);
-                setSearchQuery("");
-                if (btn.id === "all")    { setSortBy("title");  setFilterMode("popular"); fetchMovies(1,"","popular"); }
-                if (btn.id === "latest") { setSortBy("title");  setFilterMode("latest");  fetchMovies(1,"","latest"); }
-                if (btn.id === "rating") { setSortBy("rating"); setFilterMode("popular"); fetchMovies(1,"","popular"); }
-                if (btn.id === "year")   { setSortBy("year");   setFilterMode("popular"); fetchMovies(1,"","popular"); }
-              }}
-            >
-              {btn.label}
-            </button>
-          ))}
-        </div>
-        {/* Category Pills */}
-        <div className="mobile-category-pills">
-          {CATEGORIES.filter((_, index) => index < 12).map((cat) => (
-            <button
-              key={cat.id}
-              className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""}`}
-              onClick={() => handleCategoryClick(cat)}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* ── Section Label ── */}

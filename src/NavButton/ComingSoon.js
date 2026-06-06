@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TrailerModal from "../components/TrailerModal";
 import "./ComingSoon.css";
 
 const ComingSoon = () => {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -100,6 +101,9 @@ const ComingSoon = () => {
       {/* ── HEADER ── */}
       <div className="cs-header">
         <div className="cs-header-inner">
+          <div className="cs-back" onClick={() => navigate(-1)}>
+            ← Back
+          </div>
           <h1 className="cs-heading">
             <span className="cs-heading-bar"></span>
             Most Anticipated Upcoming Movies

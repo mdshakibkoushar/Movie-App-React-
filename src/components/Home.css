@@ -479,29 +479,22 @@
 
 /* ── RESPONSIVE ── */
 
-/* Desktop / Large Tablet (min 769px) — desktop filters visible, mobile hidden */
-@media (min-width: 769px) {
-  .mobile-filter-section {
-    display: none !important;
-  }
-  .quick-filter-bar {
-    display: flex;
-  }
-  .hero-category-pills {
-    display: flex;
-  }
-}
-
-/* Tablet (max 900px) */
-@media (max-width: 900px) and (min-width: 769px) {
+/* Tablet (max 900px) — same as mobile layout */
+@media (max-width: 900px) {
   .home-hero {
     height: 650px;
   }
 
+  /* Category pills — same as desktop (blur backdrop) */
   .hero-category-pills {
     bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 200px;
     padding: 12px 14px;
   }
+
+  /* Quick-filter bar — above category pills */
   .quick-filter-bar {
     bottom: 240px;
     gap: 10px;
@@ -511,7 +504,18 @@
   .quick-filter-btn {
     padding: 8px 20px;
     font-size: 0.85rem;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
+
+  /* Pills — auto width so text is fully visible */
   .filter-pill {
     flex: 0 0 auto;
     font-size: 0.76rem;
@@ -520,6 +524,8 @@
     overflow: visible;
     text-overflow: unset;
   }
+
+  /* Hide category pills beyond 12 on tablet */
   .mobile-hidden-pill {
     display: none !important;
   }
@@ -530,11 +536,11 @@
   }
 }
 
-/* Mobile (max 768px) — hide desktop filters, show mobile section */
+/* Mobile (max 768px) — same layout as desktop */
 @media (max-width: 768px) {
   /* Hero becomes shorter — just image + heading, no filter overlay */
   .home-hero {
-    height: 220px;
+    height: 650px;
   }
 
   .hero-heading {
@@ -544,35 +550,50 @@
     font-size: 0.8rem;
   }
 
-  /* Hide desktop overlay filters */
-  .quick-filter-bar {
-    display: none !important;
-  }
+  /* Category pills — same as desktop (blur backdrop) */
   .hero-category-pills {
-    display: none !important;
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 180px;
+    padding: 10px 12px;
   }
 
-  /* Show mobile filter section below hero */
-  .mobile-filter-section {
-    display: block;
+  /* Quick-filter bar — same position above category pills */
+  .quick-filter-bar {
+    bottom: 240px;
+    gap: 8px;
+    width: calc(100% - 24px);
+    max-width: 700px;
   }
 
-  /* Mobile quick filter buttons */
-  .mobile-quick-filters .quick-filter-btn {
-    padding: 8px 16px;
+  .quick-filter-btn {
+    padding: 8px 14px;
     font-size: 0.8rem;
-    flex: 1 1 auto;
-    text-align: center;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
-  /* Mobile category pills — wrap, auto width, no scroll */
-  .mobile-category-pills .filter-pill {
+  /* Pills — auto width so text is fully visible */
+  .filter-pill {
     flex: 0 0 auto;
-    font-size: 0.75rem;
-    padding: 7px 12px;
+    font-size: 0.73rem;
+    padding: 6px 10px;
     white-space: nowrap;
     overflow: visible;
     text-overflow: unset;
+  }
+
+  /* Hide category pills beyond 12 on mobile */
+  .mobile-hidden-pill {
+    display: none !important;
   }
 
   .movie-list {
@@ -593,10 +614,68 @@
   }
 }
 
+/* Small Mobile (max 540px) */
+@media (max-width: 540px) {
+  .home-hero {
+    height: 600px;
+  }
+
+  .hero-heading {
+    font-size: 1.3rem;
+  }
+
+  .mobile-hidden-pill {
+    display: none !important;
+  }
+
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 160px;
+    padding: 8px 10px;
+  }
+
+  .quick-filter-bar {
+    bottom: 220px;
+    gap: 6px;
+    width: calc(100% - 20px);
+    max-width: 100%;
+  }
+
+  .quick-filter-btn {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+    flex: 1 1 auto;
+    text-align: center;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
+  }
+
+  .filter-pill {
+    flex: 0 0 calc((100% - 30px) / 4);
+    font-size: 0.7rem;
+    padding: 6px 4px;
+  }
+
+  .movie-list {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    padding: 0 12px;
+  }
+}
+
 /* Extra Small (max 480px) */
 @media (max-width: 480px) {
   .home-hero {
-    height: 180px;
+    height: 580px;
   }
   .hero-heading {
     font-size: 1.15rem;
@@ -605,13 +684,35 @@
     font-size: 0.74rem;
   }
 
-  .mobile-quick-filters {
-    gap: 6px;
-    padding: 10px 12px 8px;
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 150px;
+    padding: 8px 8px;
   }
-  .mobile-quick-filters .quick-filter-btn {
-    padding: 7px 12px;
-    font-size: 0.74rem;
+
+  .quick-filter-bar {
+    bottom: 210px;
+    gap: 5px;
+    width: calc(100% - 16px);
+    max-width: 100%;
+  }
+
+  .quick-filter-btn {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    border-radius: 20px;
+    flex: 1 1 auto;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
   .mobile-category-pills {
@@ -646,22 +747,40 @@
 /* Very Small (max 360px) */
 @media (max-width: 360px) {
   .home-hero {
-    height: 160px;
+    height: 560px;
   }
   .hero-heading {
     font-size: 1rem;
   }
-  .hero-subtext {
-    font-size: 0.7rem;
+
+  .hero-category-pills {
+    bottom: 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    max-height: 140px;
+    padding: 6px 6px;
   }
 
-  .mobile-quick-filters {
-    gap: 5px;
-    padding: 8px 10px 7px;
+  .quick-filter-bar {
+    bottom: 200px;
+    gap: 4px;
+    width: calc(100% - 12px);
+    max-width: 100%;
   }
-  .mobile-quick-filters .quick-filter-btn {
-    padding: 6px 10px;
-    font-size: 0.7rem;
+
+  .quick-filter-btn {
+    padding: 5px 8px;
+    font-size: 0.68rem;
+    flex: 1 1 auto;
+    background: linear-gradient(
+      135deg,
+      rgba(229, 9, 20, 0.75),
+      rgba(120, 0, 50, 0.75)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.25);
   }
 
   .mobile-category-pills {
