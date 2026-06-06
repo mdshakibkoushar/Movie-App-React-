@@ -267,7 +267,6 @@ const MovieDetails = () => {
   const [error, setError] = useState("");
 
   const [justWatchLink, setJustWatchLink] = useState("");
-  const [allProviders, setAllProviders] = useState([]);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -310,7 +309,6 @@ const MovieDetails = () => {
         addProviders(region?.ads, "Free (Ads)");
         addProviders(region?.rent, "Rent");
         addProviders(region?.buy, "Buy");
-        setAllProviders(combined);
         setWatchProviders(combined.slice(0, 10));
       } catch (err) {
         setError("Failed to load movie details.");
