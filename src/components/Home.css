@@ -395,7 +395,6 @@
   cursor: not-allowed;
 }
 
-/* ── LOADER OVERLAY ── */
 .loader-overlay {
   display: flex;
   align-items: center;
