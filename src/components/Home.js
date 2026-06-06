@@ -10,30 +10,30 @@ const API_KEY = "4e44d9029b1270a757cddc766a1bcb63";
 
 // ── Category filter definitions ──
 const CATEGORIES = [
-  { id: "bollywood", label: "Bollywood Movies", section: "main" },
-  { id: "dual", label: "Dual Audio Content", section: "main" },
-  { id: "dual720", label: "Dual Audio 720P", section: "main" },
-  { id: "hollywood", label: "Hollywood Movies", section: "main" },
-  { id: "hwood1080", label: "Hollywood 1080P", section: "main" },
-  { id: "telugu", label: "Telugu", section: "main" },
-  { id: "pakistani", label: "Pakistani", section: "main" },
-  { id: "28", label: "Action", section: "main" },
-  { id: "12", label: "Adventure", section: "main" },
-  { id: "16", label: "Animation", section: "main" },
-  { id: "cartoon", label: "Cartoon", section: "main" },
-  { id: "35", label: "Comedy", section: "main" },
-  { id: "80", label: "Crime", section: "main" },
-  { id: "99", label: "Documentary", section: "main" },
-  { id: "18", label: "Drama", section: "main" },
-  { id: "10751", label: "Family", section: "main" },
-  { id: "14", label: "Fantasy", section: "main" },
-  { id: "36", label: "History", section: "main" },
-  { id: "27", label: "Horror", section: "main" },
-  { id: "9648", label: "Mystery", section: "main" },
-  { id: "10749", label: "Romance", section: "main" },
-  { id: "53", label: "Thriller", section: "main" },
-  { id: "10752", label: "War", section: "main" },
-  { id: "webseries", label: "Web Series", section: "main" },
+  { id: "bollywood",  label: "Bollywood Movies",    section: "main" },
+  { id: "dual",       label: "Dual Audio Content",  section: "main" },
+  { id: "dual720",    label: "Dual Audio 720P",     section: "main" },
+  { id: "hollywood",  label: "Hollywood Movies",    section: "main" },
+  { id: "hwood1080",  label: "Hollywood 1080P",     section: "main" },
+  { id: "telugu",     label: "Telugu",              section: "main" },
+  { id: "pakistani",  label: "Pakistani",           section: "main" },
+  { id: "28",         label: "Action",              section: "main" },
+  { id: "12",         label: "Adventure",           section: "main" },
+  { id: "16",         label: "Animation",           section: "main" },
+  { id: "cartoon",    label: "Cartoon",             section: "main" },
+  { id: "35",         label: "Comedy",              section: "main" },
+  { id: "80",         label: "Crime",               section: "main" },
+  { id: "99",         label: "Documentary",         section: "main" },
+  { id: "18",         label: "Drama",               section: "main" },
+  { id: "10751",      label: "Family",              section: "main" },
+  { id: "14",         label: "Fantasy",             section: "main" },
+  { id: "36",         label: "History",             section: "main" },
+  { id: "27",         label: "Horror",              section: "main" },
+  { id: "9648",       label: "Mystery",             section: "main" },
+  { id: "10749",      label: "Romance",             section: "main" },
+  { id: "53",         label: "Thriller",            section: "main" },
+  { id: "10752",      label: "War",                 section: "main" },
+  { id: "webseries",  label: "Web Series",          section: "main" },
 ];
 
 const Home = () => {
@@ -51,13 +51,8 @@ const Home = () => {
   const [categoryLabel, setCategoryLabel] = useState("🔥 Popular Movies");
   const [loading, setLoading] = useState(false);
 
-  const {
-    movies,
-    setMovies,
-    setDetailedMovies,
-    searchConfig,
-    setSearchConfig,
-  } = useContext(MovieContext);
+  const { movies, setMovies, setDetailedMovies, searchConfig, setSearchConfig } =
+    useContext(MovieContext);
 
   // ── Fisher-Yates shuffle ──
   const shuffleArray = (arr) => {
@@ -70,14 +65,7 @@ const Home = () => {
   };
 
   // ── Fetch movies based on current state ──
-  const fetchMovies = async (
-    page,
-    query,
-    mode,
-    genreId,
-    langCode,
-    searchKw,
-  ) => {
+  const fetchMovies = async (page, query, mode, genreId, langCode, searchKw) => {
     setLoading(true);
     try {
       let url;
@@ -108,10 +96,7 @@ const Home = () => {
 
   // ── Handle category click ──
   const handleCategoryClick = (cat) => {
-    if (cat.isLink) {
-      window.open(cat.href, "_blank");
-      return;
-    }
+    if (cat.isLink) { window.open(cat.href, "_blank"); return; }
     setActiveCategory(cat.id);
     setCategoryLabel(cat.label);
     setCurrentPage(1);
@@ -119,56 +104,18 @@ const Home = () => {
     setSearchQuery("");
     setShowFilter(false);
 
-    const numericGenres = [
-      "28",
-      "12",
-      "16",
-      "35",
-      "80",
-      "99",
-      "18",
-      "10751",
-      "14",
-      "36",
-      "27",
-      "9648",
-      "10749",
-      "53",
-      "10752",
-    ];
-    if (cat.id === "all") {
-      fetchMovies(1, "", "popular");
-      setFilterMode("popular");
-    } else if (cat.id === "latest") {
-      fetchMovies(1, "", "latest");
-      setFilterMode("latest");
-    } else if (cat.id === "bollywood") {
-      fetchMovies(1, "", "popular", null, "hi");
-      setFilterMode("category");
-    } else if (cat.id === "dual" || cat.id === "dual720") {
-      fetchMovies(1, "", "popular", null, null, "dual audio hindi");
-      setFilterMode("category");
-    } else if (cat.id === "hollywood" || cat.id === "hwood1080") {
-      fetchMovies(1, "", "popular", null, "en");
-      setFilterMode("category");
-    } else if (cat.id === "telugu") {
-      fetchMovies(1, "", "popular", null, "te");
-      setFilterMode("category");
-    }
+    const numericGenres = ["28","12","16","35","80","99","18","10751","14","36","27","9648","10749","53","10752"];
+    if (cat.id === "all") { fetchMovies(1,"","popular"); setFilterMode("popular"); }
+    else if (cat.id === "latest") { fetchMovies(1,"","latest"); setFilterMode("latest"); }
+    else if (cat.id === "bollywood") { fetchMovies(1,"","popular",null,"hi"); setFilterMode("category"); }
+    else if (cat.id === "dual" || cat.id === "dual720") { fetchMovies(1,"","popular",null,null,"dual audio hindi"); setFilterMode("category"); }
+    else if (cat.id === "hollywood" || cat.id === "hwood1080") { fetchMovies(1,"","popular",null,"en"); setFilterMode("category"); }
+    else if (cat.id === "telugu") { fetchMovies(1,"","popular",null,"te"); setFilterMode("category"); }
     // else if (cat.id === "tamil") { fetchMovies(1,"","popular",null,"ta"); setFilterMode("category"); }
-    else if (cat.id === "pakistani") {
-      fetchMovies(1, "", "popular", null, "ur");
-      setFilterMode("category");
-    } else if (cat.id === "cartoon") {
-      fetchMovies(1, "", "popular", "16");
-      setFilterMode("category");
-    } else if (cat.id === "webseries") {
-      fetchMovies(1, "", "popular", null, null, "web series");
-      setFilterMode("category");
-    } else if (numericGenres.includes(cat.id)) {
-      fetchMovies(1, "", "popular", cat.id);
-      setFilterMode("category");
-    }
+    else if (cat.id === "pakistani") { fetchMovies(1,"","popular",null,"ur"); setFilterMode("category"); }
+    else if (cat.id === "cartoon") { fetchMovies(1,"","popular","16"); setFilterMode("category"); }
+    else if (cat.id === "webseries") { fetchMovies(1,"","popular",null,null,"web series"); setFilterMode("category"); }
+    else if (numericGenres.includes(cat.id)) { fetchMovies(1,"","popular",cat.id); setFilterMode("category"); }
   };
 
   // ── Initial load ──
@@ -176,9 +123,7 @@ const Home = () => {
     fetchMovies(1, "", "popular");
     // Fetch carousel
     axios
-      .get(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`,
-      )
+      .get(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`)
       .then((res) => {
         const withBackdrop = res.data.results.filter((m) => m.backdrop_path);
         setCarouselMovies(withBackdrop.slice(0, 10));
@@ -195,10 +140,7 @@ const Home = () => {
 
     if (query) {
       // Search mode — sort is applied client-side
-      const sortVal =
-        filter === "year" || filter === "rating" || filter === "title"
-          ? filter
-          : "title";
+      const sortVal = (filter === "year" || filter === "rating" || filter === "title") ? filter : "title";
       setSearchQuery(query);
       setIsSearching(true);
       setSortBy(sortVal);
@@ -254,12 +196,8 @@ const Home = () => {
 
   // ── Sort movies client-side ──
   const getSortedMovies = () => {
-    if (sortBy === "year")
-      return [...movies].sort(
-        (a, b) => new Date(b.release_date) - new Date(a.release_date),
-      );
-    if (sortBy === "rating")
-      return [...movies].sort((a, b) => b.vote_average - a.vote_average);
+    if (sortBy === "year") return [...movies].sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+    if (sortBy === "rating") return [...movies].sort((a, b) => b.vote_average - a.vote_average);
     // Default: keep original order from API
     return [...movies];
   };
@@ -267,17 +205,18 @@ const Home = () => {
   const displayedMovies = getSortedMovies();
 
   const sectionLabel = isSearching
-    ? `🔍 Results for "${searchQuery}"${sortBy === "year" ? " · Newest First" : sortBy === "rating" ? " · Top Rated First" : ""}`
+    ? `Results for "${searchQuery}"${sortBy === "year" ? " · Newest First" : sortBy === "rating" ? " · Top Rated First" : ""}`
     : filterMode === "latest"
-      ? "🆕 Latest Movies (Now Playing)"
-      : sortBy === "year"
-        ? "📅 Popular Movies · Sorted by Newest"
-        : sortBy === "rating"
-          ? "⭐ Popular Movies · Top Rated First"
-          : "� Popular Movies · Random";
+    ? "Latest Movies (Now Playing)"
+    : sortBy === "year"
+    ? "Popular Movies · Sorted by Newest"
+    : sortBy === "rating"
+    ? "Popular Movies · Top Rated First"
+    : "All Popular Movies";
 
   return (
     <div className="home">
+
       {/* ── HERO ── */}
       <div className="home-hero">
         <div className="hero-bg-container">
@@ -298,8 +237,7 @@ const Home = () => {
             Discover <span>Amazing</span> Movies
           </h2>
           <p className="hero-subtext">
-            Search from thousands of movies, explore genres and save your
-            favorites
+            Search from thousands of movies, explore genres and save your favorites
           </p>
 
           <div className="hero-dots">
@@ -313,47 +251,28 @@ const Home = () => {
           </div>
         </div>
 
-        {/* 5 Quick Filter Buttons — overlapping hero bottom */}
+        {/* 5 Quick Filter Buttons — overlapping hero bottom (desktop) */}
         <div className="quick-filter-bar">
           {[
-            { id: "all", label: "All" },
-            { id: "rating", label: "Top Rated" },
-            { id: "latest", label: "Latest" },
-            { id: "year", label: "Newest" },
+            { id: "all",        label: "All" },
+            { id: "rating",     label: "Top Rated" },
+            { id: "latest",     label: "Latest" },
+            { id: "year",       label: "Newest" },
             { id: "comingsoon", label: "Coming Soon" },
           ].map((btn) => (
             <button
               key={btn.id}
               className={`quick-filter-btn ${activeCategory === "hero-" + btn.id ? "active" : ""}`}
               onClick={() => {
-                if (btn.id === "comingsoon") {
-                  navigate("/coming-soon");
-                  return;
-                }
+                if (btn.id === "comingsoon") { navigate("/coming-soon"); return; }
                 setActiveCategory("hero-" + btn.id);
                 setCurrentPage(1);
                 setIsSearching(false);
                 setSearchQuery("");
-                if (btn.id === "all") {
-                  setSortBy("title");
-                  setFilterMode("popular");
-                  fetchMovies(1, "", "popular");
-                }
-                if (btn.id === "latest") {
-                  setSortBy("title");
-                  setFilterMode("latest");
-                  fetchMovies(1, "", "latest");
-                }
-                if (btn.id === "rating") {
-                  setSortBy("rating");
-                  setFilterMode("popular");
-                  fetchMovies(1, "", "popular");
-                }
-                if (btn.id === "year") {
-                  setSortBy("year");
-                  setFilterMode("popular");
-                  fetchMovies(1, "", "popular");
-                }
+                if (btn.id === "all")    { setSortBy("title");  setFilterMode("popular"); fetchMovies(1,"","popular"); }
+                if (btn.id === "latest") { setSortBy("title");  setFilterMode("latest");  fetchMovies(1,"","latest"); }
+                if (btn.id === "rating") { setSortBy("rating"); setFilterMode("popular"); fetchMovies(1,"","popular"); }
+                if (btn.id === "year")   { setSortBy("year");   setFilterMode("popular"); fetchMovies(1,"","popular"); }
               }}
             >
               {btn.label}
@@ -361,9 +280,54 @@ const Home = () => {
           ))}
         </div>
 
-        {/* ── Category Pills — overlaid on hero ── */}
+        {/* ── Category Pills — overlaid on hero (desktop) ── */}
         <div className="filter-bar category-pills-bar hero-category-pills">
-          {CATEGORIES.map((cat) => (
+          {CATEGORIES.map((cat, index) => (
+            <button
+              key={cat.id}
+              className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""} ${index >= 12 ? "mobile-hidden-pill" : ""}`}
+              onClick={() => handleCategoryClick(cat)}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+      </div>
+
+      {/* ── Mobile Filter Section (below hero, only visible on mobile) ── */}
+      <div className="mobile-filter-section">
+        {/* 5 Quick Buttons */}
+        <div className="mobile-quick-filters">
+          {[
+            { id: "all",        label: "All" },
+            { id: "rating",     label: "Top Rated" },
+            { id: "latest",     label: "Latest" },
+            { id: "year",       label: "Newest" },
+            { id: "comingsoon", label: "Coming Soon" },
+          ].map((btn) => (
+            <button
+              key={btn.id}
+              className={`quick-filter-btn ${activeCategory === "hero-" + btn.id ? "active" : ""}`}
+              onClick={() => {
+                if (btn.id === "comingsoon") { navigate("/coming-soon"); return; }
+                setActiveCategory("hero-" + btn.id);
+                setCurrentPage(1);
+                setIsSearching(false);
+                setSearchQuery("");
+                if (btn.id === "all")    { setSortBy("title");  setFilterMode("popular"); fetchMovies(1,"","popular"); }
+                if (btn.id === "latest") { setSortBy("title");  setFilterMode("latest");  fetchMovies(1,"","latest"); }
+                if (btn.id === "rating") { setSortBy("rating"); setFilterMode("popular"); fetchMovies(1,"","popular"); }
+                if (btn.id === "year")   { setSortBy("year");   setFilterMode("popular"); fetchMovies(1,"","popular"); }
+              }}
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
+        {/* Category Pills */}
+        <div className="mobile-category-pills">
+          {CATEGORIES.filter((_, index) => index < 12).map((cat) => (
             <button
               key={cat.id}
               className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""}`}
@@ -412,9 +376,7 @@ const Home = () => {
         >
           <ArrowBackIosNew fontSize="small" />
         </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
+        <span>Page {currentPage} of {totalPages}</span>
         <button
           className="pagination-button"
           disabled={currentPage === totalPages}

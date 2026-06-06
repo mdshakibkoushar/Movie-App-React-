@@ -12,7 +12,6 @@ const Footer = () => {
         <p className="footer-copy">
           &copy; {new Date().getFullYear()} SHAKIB. All rights reserved.
         </p>
-        <p className="footer-tagline">Powered by TMDB API</p>
       </div>
     </footer>
   );

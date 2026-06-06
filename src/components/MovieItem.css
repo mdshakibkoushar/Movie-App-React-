@@ -299,3 +299,116 @@
   z-index: 3;
   border: 1px solid rgba(245, 197, 24, 0.3);
 }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .movie-item:hover {
+    transform: translateY(-3px) scale(1.01);
+  }
+
+  /* On mobile: always show overlay & hide bottom title (since overlay is always visible) */
+  .movie-overlay {
+    opacity: 1;
+    padding: 10px;
+    gap: 6px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.97) 0%,
+      rgba(0, 0, 0, 0.75) 45%,
+      rgba(0, 0, 0, 0.15) 75%,
+      transparent 100%
+    );
+  }
+
+  /* Hide the always-visible bottom strip since overlay handles it */
+  .movie-bottom {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* On mobile: always show play hint (centered, no hover needed) */
+  .movie-play-hint {
+    display: flex;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .watch-trailer-button {
+    padding: 7px 10px;
+    font-size: 0.75rem;
+  }
+
+  .favorite-button,
+  .view-details {
+    padding: 7px 10px;
+    font-size: 0.72rem;
+  }
+
+  .movie-info h2 {
+    font-size: 0.8rem;
+  }
+
+  .movie-year {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-item:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  .movie-overlay {
+    padding: 8px;
+    gap: 5px;
+  }
+
+  .watch-trailer-button {
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    gap: 4px;
+  }
+
+  .favorite-button,
+  .view-details {
+    padding: 6px 8px;
+    font-size: 0.68rem;
+    gap: 4px;
+  }
+
+  .movie-info h2 {
+    font-size: 0.75rem;
+  }
+
+  .movie-play-hint {
+    width: 42px;
+    height: 42px;
+    font-size: 1.1rem;
+  }
+
+  .rating-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+  }
+
+  .fav-badge {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .watch-trailer-button,
+  .favorite-button,
+  .view-details {
+    padding: 5px 6px;
+    font-size: 0.65rem;
+  }
+
+  .movie-play-hint {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+}
