@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TrailerModal from "../components/TrailerModal";
 import "./ComingSoon.css";
 
 const ComingSoon = () => {
+  const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,32 +19,40 @@ const ComingSoon = () => {
     setLoading(true);
     setError(null);
     try {
-      // Fetch 2 pages at once and merge to ensure we always have 20 movies
-      const [res1, res2] = await Promise.all([
-        axios.get(
-          `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${page}`
-        ),
-        axios.get(
-          `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${page + 1}`
-        ).catch(() => ({ data: { results: [] } })),
-      ]);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      const combined = [
-        ...(res1.data.results || []),
-        ...(res2.data.results || []),
-      ];
-
-      // Remove duplicates by id
+      let futureMovies = [];
+      let apiPage = (page - 1) * 3 + 1;
+      let maxApiPage = null;
       const seen = new Set();
-      const unique = combined.filter((m) => {
-        if (seen.has(m.id)) return false;
-        seen.add(m.id);
-        return true;
-      });
 
-      // Show up to 20 movies per page
-      setMovies(unique.slice(0, 20));
-      setTotalPages(Math.min(res1.data.total_pages, 20));
+      while (futureMovies.length < 20) {
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${apiPage}`,
+        );
+
+        if (maxApiPage === null) {
+          maxApiPage = Math.min(res.data.total_pages, 60);
+          setTotalPages(Math.max(1, Math.ceil(maxApiPage / 3)));
+        }
+
+        const results = res.data.results || [];
+        results.forEach((movie) => {
+          if (!seen.has(movie.id) && movie.release_date) {
+            const releaseDate = new Date(movie.release_date);
+            if (releaseDate > today) {
+              seen.add(movie.id);
+              futureMovies.push(movie);
+            }
+          }
+        });
+
+        apiPage++;
+        if (apiPage > (page - 1) * 3 + 3 || apiPage > maxApiPage) break;
+      }
+
+      setMovies(futureMovies.slice(0, 20));
     } catch (err) {
       setError("Failed to fetch upcoming movies.");
     } finally {
@@ -70,9 +79,17 @@ const ComingSoon = () => {
     return diff;
   };
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "TBA";
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
-    <div className="coming-soon-page">
-      {/* Trailer Modal */}
+    <div className="cs-page">
       {trailerMovie && (
         <TrailerModal
           movieId={trailerMovie.id}
@@ -81,118 +98,162 @@ const ComingSoon = () => {
         />
       )}
 
-      {/* Hero */}
-      <div className="cs-hero">
-        <div className="cs-hero-badge">🎬 Coming Soon</div>
-        <h1>
-          Upcoming <span>Movies</span>
-        </h1>
-        <p>Get ready! These blockbusters are hitting theaters soon.</p>
+      {/* ── HEADER ── */}
+      <div className="cs-header">
+        <div className="cs-header-inner">
+          <div className="cs-back" onClick={() => navigate(-1)}>
+            ← Back
+          </div>
+          <h1 className="cs-heading">
+            <span className="cs-heading-bar"></span>
+            Most Anticipated Upcoming Movies
+          </h1>
+          <p className="cs-subheading">
+            {movies.length > 0 && !loading
+              ? `Showing ${movies.length} upcoming releases`
+              : "Loading upcoming releases..."}
+          </p>
+        </div>
       </div>
 
-      {/* Error */}
+      {/* ── ERROR ── */}
       {error && <p className="cs-error">⚠️ {error}</p>}
 
-      {/* Loading */}
+      {/* ── LOADING ── */}
       {loading && (
         <div className="cs-loading">
           <div className="cs-spinner"></div>
-          <p>Loading upcoming movies...</p>
+          <p>Fetching upcoming movies...</p>
         </div>
       )}
 
-      {/* Movie Grid */}
+      {/* ── EMPTY ── */}
       {!loading && movies.length === 0 && (
-        <div className="cs-loading">
-          <p style={{ color: "#888", fontSize: "1.1rem" }}>😕 No upcoming movies found on this page. Try next page.</p>
+        <div className="cs-empty">
+          <p>No upcoming movies found. Try next page.</p>
         </div>
       )}
 
+      {/* ── MOVIE LIST (IMDB-style rows) ── */}
       {!loading && movies.length > 0 && (
-        <div className="cs-grid">
-          {movies.map((movie) => {
-            const days = getDaysUntilRelease(movie.release_date);
-            const releaseYear = movie.release_date
-              ? movie.release_date.slice(0, 4)
-              : "TBA";
-            const releaseFormatted = movie.release_date
-              ? new Date(movie.release_date).toLocaleDateString("en-US", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })
-              : "TBA";
+        <div className="cs-list-wrap">
+          <div className="cs-list">
+            {movies.map((movie, index) => {
+              const days = getDaysUntilRelease(movie.release_date);
+              const releaseFormatted = formatDate(movie.release_date);
 
-            return (
-              <div key={movie.id} className="cs-card">
-                {/* Poster */}
-                <div className="cs-poster-wrap">
-                  <img
-                    src={
-                      movie.poster_path
-                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                        : "https://via.placeholder.com/300x450/141420/888?text=No+Image"
-                    }
-                    alt={movie.title}
-                    className="cs-poster"
-                  />
-
-                  {/* Days badge */}
-                  {days !== null && days > 0 && (
-                    <div className={`cs-days-badge ${days <= 30 ? "soon" : ""}`}>
-                      {days === 1 ? "Tomorrow!" : `${days} days`}
-                    </div>
-                  )}
-                  {/* Play Button */}
-                  <div
-                    className="cs-play-btn"
-                    onClick={() => setTrailerMovie({ id: movie.id, title: movie.title })}
-                  >
-                    ▶
+              return (
+                <div key={movie.id} className="cs-row">
+                  {/* Rank */}
+                  <div className="cs-rank">
+                    {(currentPage - 1) * 20 + index + 1}
                   </div>
 
-                  <div className="cs-overlay">
-                    <h3 className="cs-overlay-title">{movie.title}</h3>
-                    <p className="cs-overlay-date">📅 {releaseFormatted}</p>
-                    <p className="cs-overlay-overview">
+                  {/* Poster */}
+                  <div className="cs-row-poster-wrap">
+                    <img
+                      src={
+                        movie.poster_path
+                          ? `https://image.tmdb.org/t/p/w185${movie.poster_path}`
+                          : "https://via.placeholder.com/90x135/1a1a24/555?text=N/A"
+                      }
+                      alt={movie.title}
+                      className="cs-row-poster"
+                    />
+                    {/* Play overlay on poster */}
+                    <div
+                      className="cs-row-play"
+                      onClick={() =>
+                        setTrailerMovie({ id: movie.id, title: movie.title })
+                      }
+                    >
+                      <span className="cs-row-play-icon">▶</span>
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div className="cs-row-info">
+                    <Link to={`/movie/${movie.id}`} className="cs-row-title">
+                      {movie.title}
+                    </Link>
+
+                    <div className="cs-row-meta">
+                      {movie.release_date && (
+                        <span className="cs-row-year">
+                          {movie.release_date.slice(0, 4)}
+                        </span>
+                      )}
+                      {movie.vote_average > 0 && (
+                        <span className="cs-row-genre">
+                          ⭐ {movie.vote_average.toFixed(1)}
+                        </span>
+                      )}
+                      {days !== null && days > 0 && (
+                        <span
+                          className={`cs-row-days ${days <= 30 ? "soon" : ""}`}
+                        >
+                          {days === 1 ? "🔥 Tomorrow!" : `🕐 ${days} days`}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="cs-row-overview">
                       {movie.overview
-                        ? movie.overview.slice(0, 100) + "..."
+                        ? movie.overview.slice(0, 200) +
+                          (movie.overview.length > 200 ? "..." : "")
                         : "No description available."}
                     </p>
-                    <Link to={`/movie/${movie.id}`} className="cs-details-btn">
-                      🎬 View Details
-                    </Link>
+
+                    <div className="cs-row-date">
+                      <span className="cs-row-date-label">Release Date:</span>
+                      <span className="cs-row-date-val">
+                        {releaseFormatted}
+                      </span>
+                    </div>
+
+                    <div className="cs-row-actions">
+                      <button
+                        className="cs-btn-trailer"
+                        onClick={() =>
+                          setTrailerMovie({ id: movie.id, title: movie.title })
+                        }
+                      >
+                        ▶ Watch Trailer
+                      </button>
+                      <Link
+                        to={`/movie/${movie.id}`}
+                        className="cs-btn-details"
+                      >
+                        + More Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
-
-                {/* Bottom info */}
-                <div className="cs-card-bottom">
-                  <h3 className="cs-card-title">{movie.title}</h3>
-                  <p className="cs-card-date">📅 {releaseFormatted}</p>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       )}
 
-      {/* Pagination */}
+      {/* ── PAGINATION ── */}
       {!loading && totalPages > 1 && (
         <div className="cs-pagination">
           <button
-            className="cs-page-btn"
+            className="cs-pg-btn"
             disabled={currentPage === 1}
             onClick={() => handlePageChange(currentPage - 1)}
           >
-            ‹
+            ‹ Prev
           </button>
-          <span>Page {currentPage} of {totalPages}</span>
+          <span className="cs-pg-info">
+            Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+          </span>
           <button
-            className="cs-page-btn"
+            className="cs-pg-btn"
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
           >
-            ›
+            Next ›
           </button>
         </div>
       )}

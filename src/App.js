@@ -1,10 +1,9 @@
 import React from "react";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import MovieDetails from "./components/MovieDetails";
 import Favorites from "./components/Favorites";
 import NavBar from "./components/NavBar";
-import Login from "./components/Login";
 import ActionMovies from "./NavButton/ActionMovies";
 import ComingSoon from "./NavButton/ComingSoon";
 import { MovieProvider } from "./context/MovieContext";
@@ -12,47 +11,22 @@ import Footer from "./components/Footer";
 import "./App.css";
 
 const AppContent = () => {
-  const location = useLocation();
-  const isLoggedIn = localStorage.getItem("loggedIn") === "true";
-
   return (
     <div
       style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-      {isLoggedIn && location.pathname !== "/login" && <NavBar />}
+      <NavBar />
       <main style={{ flex: 1 }}>
         <Routes>
-          <Route
-            path="/login"
-            element={isLoggedIn ? <Navigate to="/" /> : <Login />}
-          />
-          <Route
-            path="/"
-            element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/favorites"
-            element={isLoggedIn ? <Favorites /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/genre/:genre"
-            element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/genre/action"
-            element={isLoggedIn ? <ActionMovies /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/coming-soon"
-            element={isLoggedIn ? <ComingSoon /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/movie/:imdbID"
-            element={isLoggedIn ? <MovieDetails /> : <Navigate to="/login" />}
-          />
+          <Route path="/" element={<Home />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/genre/:genre" element={<Home />} />
+          <Route path="/genre/action" element={<ActionMovies />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/movie/:imdbID" element={<MovieDetails />} />
         </Routes>
       </main>
-      {isLoggedIn && location.pathname !== "/login" && <Footer />}
+      <Footer />
     </div>
   );
 };
@@ -62,7 +36,7 @@ const App = () => {
     <MovieProvider>
       <AppContent />
     </MovieProvider>
-    // this is the main App component that wraps the entire application with the MovieProvider context and renders the AppContent component which contains the routing logic and layout of the application.
+    // this structure allows us to keep the MovieProvider at the top level while managing the routing and authentication logic separately in AppContent.git
   );
 };
 
