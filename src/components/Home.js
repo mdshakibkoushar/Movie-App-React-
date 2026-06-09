@@ -47,6 +47,7 @@ const Home = () => {
   const [carouselMovies, setCarouselMovies] = useState([]);
   const [bgIndex, setBgIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [showFilter, setShowFilter] = useState(false);
   const [categoryLabel, setCategoryLabel] = useState("🔥 Popular Movies");
   const [loading, setLoading] = useState(false);
 
@@ -116,6 +117,7 @@ const Home = () => {
     setCurrentPage(1);
     setIsSearching(false);
     setSearchQuery("");
+    setShowFilter(false);
 
     const numericGenres = [
       "28",
@@ -422,17 +424,28 @@ const Home = () => {
             </button>
           ))}
         </div>
-        {/* Category Pills */}
-        <div className="mobile-category-pills">
-          {CATEGORIES.filter((_, index) => index < 12).map((cat) => (
-            <button
-              key={cat.id}
-              className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""}`}
-              onClick={() => handleCategoryClick(cat)}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Category Dropdown Toggle */}
+        <div className="mobile-category-dropdown">
+          <button
+            className={`mobile-cat-toggle-btn ${showFilter ? "open" : ""}`}
+            onClick={() => setShowFilter((prev) => !prev)}
+          >
+            <span>Categories</span>
+            <span className="mobile-cat-arrow">{showFilter ? "▲" : "▼"}</span>
+          </button>
+          {showFilter && (
+            <div className="mobile-category-pills">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`filter-pill ${activeCategory === cat.id ? "active" : ""} ${cat.isLink ? "link-pill" : ""}`}
+                  onClick={() => handleCategoryClick(cat)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
