@@ -49,7 +49,7 @@ const NavBar = () => {
     setTimeout(() => {
       setSearchConfig({ query: trimmed, filter: "popular" });
     }, 50);
-    setSearchQuery("");
+    // NOTE: searchQuery intentionally NOT cleared so user can see what they searched
   };
 
   // Close menu when clicking outside
@@ -83,7 +83,7 @@ const NavBar = () => {
             {menuOpen && (
               <div className="imdb-dropdown">
                 <div className="imdb-dropdown-header">
-                  <span>Browse</span>
+                  <span>CLOSE</span>
                   <button
                     className="imdb-dropdown-close"
                     onClick={() => setMenuOpen(false)}
@@ -138,7 +138,7 @@ const NavBar = () => {
           </form>
         </div>
 
-        {/* ── RIGHT: Nav Links + Logout (desktop) ── */}
+        {/* ── RIGHT: Nav Links (desktop) ── */}
         <nav className="imdb-right">
           <NavLink
             to="/"
