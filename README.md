@@ -4,11 +4,9 @@
 
 ---
 
-## 📸 Screenshots
-
-| Home Page                                                                                                                  | Movie Details                                                                                                                  |
+## 📸 Screenshot| Home Page                                                                                                                   Details                                                                                                                  
 | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| ![Home]<img width="1920" height="1080" alt="Screenshot (323)" src="https://github.com/user-attachments/assets/f6e46fcc-f956-47bc-975a-ca5ea862f32e" />
+| [Home]<img width="1920" height="1080" alt="Screenshot (323)" src="https://github.com/user-attachments/assets/f6e46fcc-f956-47bc-975a-ca5ea862f32e" />
  | ![Details]<img width="1920" height="1080" alt="Screenshot (322)" src="https://github.com/user-attachments/assets/91c5679a-38f1-4e61-8c65-01fbbc1a424f" />
  |
 
