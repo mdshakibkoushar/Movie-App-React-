@@ -1,10 +1,6 @@
 ﻿# 🎬 MovieVault — React Movie App
 
-![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![React Router](https://img.shields.io/badge/React_Router-6.x-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
-![Axios](https://img.shields.io/badge/Axios-1.7.x-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
-![MUI](https://img.shields.io/badge/MUI-6.x-007FFF?style=for-the-badge&logo=mui&logoColor=white)
-![TMDB](https://img.shields.io/badge/TMDB_API-v3-01B4E4?style=for-the-badge&logo=themoviedatabase&logoColor=white)
+
 
 ---
 
@@ -12,11 +8,15 @@
 
 | Home Page                                                                                                                  | Movie Details                                                                                                                  |
 | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| ![Home](<https://github.com/mdshakibkoushar/Training-_session-3/blob/main/Movie%20App(React)/photo/Screenshot%20(94).png>) | ![Details](<https://github.com/mdshakibkoushar/Training-_session-3/blob/main/Movie%20App(React)/photo/Screenshot%20(101).png>) |
+| ![Home]<img width="1920" height="1080" alt="Screenshot (323)" src="https://github.com/user-attachments/assets/f6e46fcc-f956-47bc-975a-ca5ea862f32e" />
+ | ![Details]<img width="1920" height="1080" alt="Screenshot (322)" src="https://github.com/user-attachments/assets/91c5679a-38f1-4e61-8c65-01fbbc1a424f" />
+ |
 
 | Favorites Page                                                                                                                   | Coming Soon                                                                                                                      |
 | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| ![Favorites](<https://github.com/mdshakibkoushar/Training-_session-3/blob/main/Movie%20App(React)/photo/Screenshot%20(104).png>) | ![ComingSoon](<https://github.com/mdshakibkoushar/Training-_session-3/blob/main/Movie%20App(React)/photo/Screenshot%20(95).png>) |
+| ![Favorites]<img width="1920" height="1080" alt="Screenshot (325)" src="https://github.com/user-attachments/assets/d876235a-759d-40c8-8ed5-f2646e8b85c7" />
+ | ![Play]<img width="1920" height="1080" alt="Screenshot (326)" src="https://github.com/user-attachments/assets/14788adf-5601-42d0-bab8-c32d049a2ff4" />
+ |
 
 ---
 
@@ -373,7 +373,7 @@ TMDB images are served from: `https://image.tmdb.org/t/p/`
 The API key is hardcoded as:
 
 ```
-4e44d9029b1270a757cddc766a1bcb63
+*******************
 ```
 
 > ⚠️ For production use, move this to an environment variable: `REACT_APP_TMDB_KEY` and reference it as `process.env.REACT_APP_TMDB_KEY`.
